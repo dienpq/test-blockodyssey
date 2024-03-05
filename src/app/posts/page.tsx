@@ -44,7 +44,7 @@ export default function Posts() {
     };
 
     return (
-        <div className="mx-auto max-w-6xl py-24">
+        <div className="mx-auto max-w-6xl py-24 px-6">
             <div className="flex justify-between items-center mb-16">
                 <h1 className="text-2xl font-bold">Posts</h1>
                 <div>
