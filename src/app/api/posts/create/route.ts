@@ -20,6 +20,9 @@ export async function POST(req: Request) {
         const fileData = fs.readFileSync(filePath, "utf8");
         const posts: Post[] = JSON.parse(fileData);
 
+        const newId =
+            Math.random().toString(16).slice(2) + Date.now().toString(16);
+
         const newPost: Post = {
             id: posts.length + 1,
             title: title,

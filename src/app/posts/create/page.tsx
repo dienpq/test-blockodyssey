@@ -20,10 +20,8 @@ export default function Contact() {
         validationSchema: validationSchema,
 
         onSubmit: async (values) => {
-            const notification = { status: true, message: "" };
-
             try {
-                const response = await fetch("/api/create-post", {
+                const response = await fetch("/api/posts/create", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -35,14 +33,12 @@ export default function Contact() {
                     throw new Error("Network response was not ok.");
 
                 const responseData = await response.json();
-                if (responseData) {
+                console.log(responseData);
+                if (responseData && responseData.success) {
                     router.push("/posts");
                 }
             } catch (error) {
-                notification.status = false;
-                notification.message = "Failed to send email";
-            } finally {
-                console.log(notification);
+                console.log(error);
             }
         },
     });
