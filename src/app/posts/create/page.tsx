@@ -1,46 +1,48 @@
 "use client";
 
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
-    email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
     title: Yup.string().required("Title is required"),
-    message: Yup.string().required("Message is required"),
+    content: Yup.string().required("Content is required"),
 });
 
 export default function Contact() {
-    const [status, setStatus] = useState(false);
-    const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false);
-
+    const router = useRouter();
     const formik = useFormik({
         initialValues: {
-            firstName: "",
-            lastName: "",
-            email: "",
             title: "",
-            message: "",
+            content: "",
         },
 
         validationSchema: validationSchema,
 
         onSubmit: async (values) => {
-            setLoading(true);
             const notification = { status: true, message: "" };
 
             try {
+                const response = await fetch("/api/create-post", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(values),
+                });
+
+                if (!response.ok)
+                    throw new Error("Network response was not ok.");
+
+                const responseData = await response.json();
+                if (responseData) {
+                    router.push("/posts");
+                }
             } catch (error) {
                 notification.status = false;
                 notification.message = "Failed to send email";
             } finally {
-                setLoading(false);
-                setStatus(notification.status);
-                setMessage(notification.message);
-                setTimeout(() => setMessage(""), 3000);
+                console.log(notification);
             }
         },
     });
@@ -87,24 +89,24 @@ export default function Contact() {
                         </div>
                         <div className="sm:col-span-2">
                             <label
-                                htmlFor="message"
+                                htmlFor="content"
                                 className="block text-sm font-semibold leading-6 text-gray-900"
                             >
                                 Content
                             </label>
                             <div className="mt-2.5">
                                 <textarea
-                                    name="message"
-                                    id="message"
+                                    name="content"
+                                    id="content"
                                     rows={4}
-                                    value={values.message}
+                                    value={values.content}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
-                                {errors.message && touched.message && (
+                                {errors.content && touched.content && (
                                     <span className="text-red-600">
-                                        {errors.message}
+                                        {errors.content}
                                     </span>
                                 )}
                             </div>
@@ -112,15 +114,8 @@ export default function Contact() {
                     </div>
                     <div className="mt-8 flex justify-center">
                         <button
-                            disabled={loading}
                             type="submit"
-                            className={`relative rounded-md w-full ${
-                                loading ? "bg-indigo-400" : "bg-indigo-600"
-                            }  px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm ${
-                                !loading
-                                    ? "hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    : null
-                            } `}
+                            className="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
                             Submit
                         </button>

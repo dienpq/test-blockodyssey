@@ -2,8 +2,10 @@ import Image from "next/image";
 
 export default function Home() {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <h3>Test in Blockodyssey</h3>
+        <main className="flex flex-col items-center justify-between gap-10 py-24">
+            <h3 className="text-3xl uppercase font-semibold">
+                Test in Blockodyssey
+            </h3>
             <a
                 href="/posts"
                 type="button"
