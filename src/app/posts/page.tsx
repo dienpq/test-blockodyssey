@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 type Post = {
-    id: number;
+    id: string;
     title: string;
     content: string;
 };
@@ -12,20 +12,40 @@ export default function Posts() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const fetchData = async () => {
+        setLoading(true);
+        const res = await fetch("/posts.json");
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+            setPosts(data);
+        }
+        setLoading(false);
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            const res = await fetch("/posts.json");
-            const data = await res.json();
-
-            if (Array.isArray(data)) {
-                setPosts(data);
-            }
-            setLoading(false);
-        };
-
         fetchData();
     }, []);
+
+    const handleDeletePost = async (id: string) => {
+        try {
+            const response = await fetch("/api/posts/delete", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                fetchData();
+            }
+        } catch (error) {
+            console.error("There was an error deleting the post:", error);
+        }
+    };
 
     return (
         <div className="mx-auto max-w-6xl py-24">
@@ -56,6 +76,9 @@ export default function Posts() {
                                       <button
                                           type="button"
                                           className="rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                          onClick={() =>
+                                              handleDeletePost(post.id)
+                                          }
                                       >
                                           Delete
                                       </button>

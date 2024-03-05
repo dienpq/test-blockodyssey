@@ -1,32 +1,12 @@
 [
   {
-    "id": 1,
+    "id": "1",
     "title": "Post Title 1",
     "content": "This is the content of post 1."
   },
   {
-    "id": 2,
+    "id": "2",
     "title": "Post Title 2",
     "content": "This is the content of post 2."
-  },
-  {
-    "id": 3,
-    "title": "sss",
-    "content": "ssss"
-  },
-  {
-    "id": 4,
-    "title": "sss",
-    "content": "ssss"
-  },
-  {
-    "id": 5,
-    "title": "sss",
-    "content": "ssss"
-  },
-  {
-    "id": 6,
-    "title": "sss",
-    "content": "ssss"
   }
 ]
